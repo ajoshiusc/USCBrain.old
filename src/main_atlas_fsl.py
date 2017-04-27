@@ -184,4 +184,3 @@ lab2mm1 = image.new_img_like(lab2mm, lab2mm.get_data() *
                              (prob_img2mm.get_data() > 0.9))
 lab2mm1.to_filename('/big_disk/ajoshi/coding_ground/hybridatlas/\
 hBCI_DNI_fsl/BCI-DNI_brain-maxprob-thr90-2mm.nii.gz')
-
