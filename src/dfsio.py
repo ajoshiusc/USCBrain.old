@@ -41,20 +41,21 @@ def readdfs(fname):
 
     fid = open(fname, 'rb')
     hdr.ftype_header = np.array(struct.unpack('c' * 12, fid.read(12)), dtype='S1')
-    if 'DFS' not in ''.join(hdr.ftype_header):
+    print(((hdr.ftype_header).tostring()))
+    if b'DFS' not in (hdr.ftype_header).tostring():
         raise ValueError('Invalid dfs file' + fname)  # TODO: Change this to a custom exception in future
-    hdr.hdrsize = np.array(struct.unpack('i', fid.read(4)), dtype='int32')  # size(int32) = 4 bytes
-    hdr.mdoffset = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
-    hdr.pdoffset = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
+    hdr.hdrsize = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]  # size(int32) = 4 bytes
+    hdr.mdoffset = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
+    hdr.pdoffset = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
     hdr.nTriangles = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
     hdr.nVertices = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
-    hdr.nStrips = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
-    hdr.stripSize = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
-    hdr.normals = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
-    hdr.uvStart = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
-    hdr.vcoffset = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
-    hdr.labelOffset = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
-    hdr.vertexAttributes = np.array(struct.unpack('i', fid.read(4)), dtype='int32')
+    hdr.nStrips = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
+    hdr.stripSize = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
+    hdr.normals = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
+    hdr.uvStart = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
+    hdr.vcoffset = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
+    hdr.labelOffset = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
+    hdr.vertexAttributes = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]
     fid.seek(hdr.hdrsize)
 
     if hdr.nTriangles > 0 :
