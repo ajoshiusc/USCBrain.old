@@ -1,8 +1,8 @@
 ## Welcome to GitHub Pages
-Test
+Test.
 # Using the hBCI-DNI atlas with BrainSuite
-test
+test.
 # Using the hBCI-DNI atlas with FreeSurfer
-test
+test.
 # Using the hBCI-DNI atlas with FSL
-test
+test.
