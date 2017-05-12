@@ -1,5 +1,6 @@
 ### Using the USCBrain atlas with BrainSuite
-test.
+The USCBrain atlas is fully compatible with BrainSuite and is included in the default GUI. It can also be used separately with SVReg module in BrainSuite from the command line. Please refer to [this](http://brainsuite.org/processing/svreg/usage/).
+
 ### Using the USCBrain atlas with FreeSurfer
 The USCBrain atlas can be used with FreeSurfer for surface labeling of a given subject. This can be done in the following steps:
 
