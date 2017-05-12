@@ -9,7 +9,7 @@ so = readdfs('/big_disk/ajoshi/coding_ground/svreg-matlab/BCI-DNI_brain_atlas/BC
 s.labels=so.labels;
 h=figure
 patch('faces',s.faces,'vertices',s.vertices,'facevertexcdata',s.attributes,'edgecolor','none','facecolor','interp','BackFaceLighting','unlit');
-axis equal; axis off; material dull; view(-90,0); camlight;colormap gray;caxis([0,1]);
+axis equal; axis off; material dull; view(90,0); camlight;colormap gray;caxis([0,1]);
 
 tri_lab = s.labels(s.faces);
 flg=max(tri_lab,[],2) == min(tri_lab,[],2);
@@ -52,6 +52,6 @@ end
 %set (h, 'Units', 'normalized', 'Position', [0,0,1,1]);
 saveas(h,'left_freq1_2.pdf');
 saveas(h,'left_freq1_2.png');
-view(90,0);camlight;
+view(-90,0);camlight;
 saveas(h,'left_freq2_2.pdf');
 saveas(h,'left_freq2_2.png');
