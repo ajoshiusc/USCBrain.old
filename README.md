@@ -19,9 +19,11 @@ FSL can be used with the new atlas to warp atlas labels to the subject labels. T
 ```
 flirt -ref <anat-image BFC file> -in <uscbrain BFC file> -omat <out-mat file>
 fnirt --ref=<anat-image BFC file> --in=<uscbrain BFC file> --aff=<out-mat file> --cout=<fnirtcoeff coeff file>
-applyxfm --ref=<anat-image BFC file> --in=<uscbrain BFC file> --out=<warped-labels> --coef=<fnirtcoeff coeff file> --premat=<out-mat file>
+applyxfm --ref=<anat-image BFC file> --in=<uscbrain BFC file> --out=<warped-labels> --coef=<fnirtcoeff coeff file> 
 ```
 Note that execution time for flirt is 5-10 min and fnirt can take upto 1-2 hours. 
 
+
+![Softwares](https://docs.google.com/drawings/d/127XSDsr5Ccu2U039kpnzY6T8wHqoGdHtOmu1TePyAcY/pub?w=763&h=467)
 ### Refrences
 * [FNIRT](http://web.mit.edu/fsl_v5.0.8/fsl/doc/wiki/FNIRT(2f)UserGuide.html#Now_what.3F_--_applywarp.21) User guide
