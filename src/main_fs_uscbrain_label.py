@@ -12,6 +12,7 @@ import os
 from scipy.spatial import cKDTree
 from surfproc import view_patch_vtk, patch_color_labels
 import scipy as sp
+import matlab.engine as meng
 
 p_dir_ref = '/big_disk/ajoshi/HCP_data'
 ref_dir = os.path.join(p_dir_ref, 'reference')
@@ -40,8 +41,8 @@ class bci:
 
 subbasename = '/big_disk/ajoshi/fs_dir/co20050723_090747MPRAGET1Coronals002a001'
 #'/big_disk/ajoshi/fs_sub/co20050723_110235Flash3Dt1CORONALs002a001'
-hemi = 'left'
-fshemi = 'lh'
+hemi = 'right'
+fshemi = 'rh'
 
 ''' USCBrain to FS processed BCI '''
 bci_bsti = readdfs('/big_disk/ajoshi/coding_ground/svreg/USCBrain/BCI-DNI_brain.'+ hemi +'.mid.cortex.dfs')
@@ -77,3 +78,10 @@ s.vertices = (s.vertices + so)/2.0
 view_patch_vtk(s)
 s.faces=s.faces[:,(0,2,1)]
 writedfs(subbasename + '/'+ hemi +'.mid.dfs',s)
+#eng = meng.start_matlab()
+#eng.addpath(eng.genpath('/big_disk/ajoshi/coding_ground/svreg-matlab/MEX_Files'))
+#eng.addpath(eng.genpath('/big_disk/ajoshi/coding_ground/svreg-matlab/3rdParty'))
+#eng.addpath(eng.genpath('/big_disk/ajoshi/coding_ground/svreg-matlab/src'))
+#xmlf='/big_disk/ajoshi/coding_ground/svreg/USCBrain/brainsuite_labeldescription.xml'
+#eng.recolor_by_label('../precentral_corr/BCI-DNI_brain.left.mid.cortex.dfs','',xmlf,nargout=0)
+#view_patch_vtk(s)

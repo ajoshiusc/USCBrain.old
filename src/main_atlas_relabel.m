@@ -41,39 +41,39 @@ for hemi1={'left','right'}
     for jj=1:length(aa)
         sout.labels(sin.labels==aa(jj,1))=aa(jj,2);
     end
-    
+
     %== Soyoungs edits based on figures_compile.pptx
     % Swap 126 and 124 (superior and inferior branches of pars opercularis)
     roi1=sout.labels==124; roi2=sout.labels==126;
     sout.labels(roi1)=126;sout.labels(roi2)=124;
-    
+
     % Swap 338 and 340 (superior and inferior branches of pars opercularis)
     roi1=sout.labels==338; roi2=sout.labels==340;
     sout.labels(roi1)=340;sout.labels(roi2)=338;
-    
+
     % Gyrus rectus: Silhoutte scores look good but very tiny ROI on the left
     % hemisphere, therefore merged the two subdivisions
     roi=sout.labels==160 | sout.labels==162; sout.labels(roi)=158;
     roi=sout.labels==161 | sout.labels==163; sout.labels(roi)=159;
-    
-    
+
+
     sout = rmfield(sout, 'vcolor');
     sout = rmfield(sout, 'attributes');
     outlmid = [out_atlas,'.',hemi,'.mid.cortex.dfs'];
     writedfs(outlmid,sout);
-    
+
     xmlf=[out_atlas_dir,'/brainsuite_labeldescription.xml'];
     recolor_by_label(outlmid, out_atlas, xmlf);
     sout=readdfs(outlmid);
-    
+
     inlin = [in_atlas,'.',hemi,'.inner.cortex.dfs'];
     sin=readdfs(inlin);souti=sin;
     souti.vcolor= sout.vcolor;
     souti.labels= sout.labels;
     writedfs([out_atlas,'.',hemi,'.inner.cortex.dfs'],souti);
-    
+
     inlpial = [in_atlas,'.',hemi,'.pial.cortex.dfs'];
-    sin = readdfs(inlin); soutp = sin;
+    sin = readdfs(inlin); soutp = sin;  % There is a bug here reading inner surface!!
     soutp.vcolor = sout.vcolor;
     soutp.labels = sout.labels;
     outlin = [out_atlas,'.',hemi,'.pial.cortex.dfs'];

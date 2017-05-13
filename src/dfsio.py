@@ -41,7 +41,7 @@ def readdfs(fname):
 
     fid = open(fname, 'rb')
     hdr.ftype_header = np.array(struct.unpack('c' * 12, fid.read(12)), dtype='S1')
-    print(((hdr.ftype_header).tostring()))
+#    print(((hdr.ftype_header).tostring()))
     if b'DFS' not in (hdr.ftype_header).tostring():
         raise ValueError('Invalid dfs file' + fname)  # TODO: Change this to a custom exception in future
     hdr.hdrsize = np.array(struct.unpack('i', fid.read(4)), dtype='int32')[0]  # size(int32) = 4 bytes
