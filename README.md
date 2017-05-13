@@ -23,5 +23,7 @@ applyxfm --ref=<anat-image BFC file> --in=<uscbrain BFC file> --out=<warped-labe
 ```
 Note that execution time for flirt is 5-10 min and fnirt can take upto 1-2 hours. 
 
+
+![Softwares](https://docs.google.com/drawings/d/127XSDsr5Ccu2U039kpnzY6T8wHqoGdHtOmu1TePyAcY/pub?w=763&h=467)
 ### Refrences
 * [FNIRT](http://web.mit.edu/fsl_v5.0.8/fsl/doc/wiki/FNIRT(2f)UserGuide.html#Now_what.3F_--_applywarp.21) User guide
