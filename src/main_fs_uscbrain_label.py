@@ -12,7 +12,7 @@ import os
 from scipy.spatial import cKDTree
 from surfproc import view_patch_vtk, patch_color_labels
 import scipy as sp
-import matlab.engine as meng
+#import matlab.engine as meng
 
 p_dir_ref = '/big_disk/ajoshi/HCP_data'
 ref_dir = os.path.join(p_dir_ref, 'reference')

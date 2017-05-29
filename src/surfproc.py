@@ -7,7 +7,7 @@ from vtk import (vtkSphereSource, vtkPolyData, vtkDecimatePro, vtkPoints, vtkCle
 from dfsio import readdfs, writedfs
 from vtk.util.numpy_support import numpy_to_vtk, numpy_to_vtkIdTypeArray, vtk_to_numpy
 import scipy as sp
-from mayavi import mlab
+#from mayavi import mlab
 #import trimesh as tm
 
 __author__ = "Anand A. Joshi"
@@ -433,12 +433,12 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.tri as mtri
 import matplotlib.pyplot as plt
 from matplotlib.colors import LightSource
-from vispy import scene
-from vispy.color import Color
-from vispy import gloo
-from vispy.scene.cameras import TurntableCamera
-import vispy.io
-import vispy.geometry
+#from vispy import scene
+#from vispy.color import Color
+#from vispy import gloo
+#from vispy.scene.cameras import TurntableCamera
+#import vispy.io
+#import vispy.geometry
 import ply
 import sys
 
