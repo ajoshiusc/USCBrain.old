@@ -1,4 +1,19 @@
-# Byte-compiled / optimized / DLL files
+*.mat
+*.dfs
+*.gz
+*.dfc
+*.xml
+*.png
+*.img
+*.hdr
+*.pdf
+*.txt
+*.warp
+*.txt
+*.xlsx
+
+
+# *Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
