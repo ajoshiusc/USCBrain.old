@@ -44,7 +44,7 @@ set(gcf, 'Position', get(0,'Screensize'));%zoom(2); % Maximize figure.
 saveas(h,'left_ang_gyrus_Grayordinates2.png');
 
 %%
-load('connectivity_fileangular gyrus_left_subdivision=3_BCI.mat')
+load('connectivity_fileangular gyrus_left_subdivision=2_BCI.mat')
 vcolor=0*vertices+.5;
 vcolor(ROI_labels'==1,1)=1;vcolor(ROI_labels'==1,2)=0;vcolor(ROI_labels'==1,3)=0;
 vcolor(ROI_labels'==2,1)=0;vcolor(ROI_labels'==2,2)=1;vcolor(ROI_labels'==2,3)=0;
@@ -59,7 +59,7 @@ view(-45,15); camlight;material dull;lighting phong;
 ax = gca;               % get the current axis
 ax.Clipping = 'off';    % turn clipping off
 set(gcf, 'Position', get(0,'Screensize'));%zoom(2); % Maximize figure.
-saveas(h,'left_ang_gyrus_Grayordinates_subdivided3.png');
+saveas(h,'left_ang_gyrus_Grayordinates_subdivided2.png');
 
 %%
 load('intensity_file_angular gyrus_226_nCluster=2_BCI.mat')
