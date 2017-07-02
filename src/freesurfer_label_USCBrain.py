@@ -11,13 +11,12 @@ from dfsio import writedfs, readdfs
 import os
 from scipy.spatial import cKDTree
 import scipy as sp
-
-import sys, getopt
+import sys
+import getopt
 
 p_dir_ref = '/big_disk/ajoshi/HCP_data'
 ref_dir = os.path.join(p_dir_ref, 'reference')
 ref = '100307'
-
 
 
 def interpolate_labels_colors(fromsurf=[], tosurf=[], skipzero=0):
@@ -38,80 +37,77 @@ def interpolate_labels_colors(fromsurf=[], tosurf=[], skipzero=0):
     return tosurf
 
 
-
-
 def main(argv):
-   inputfile = ''
-   outputfile = ''
-   try:
-      opts, args = getopt.getopt(argv,"hf:a:",["ifile=","ofile="])
-   except getopt.GetoptError:
-      print 'python freesurfer_label_USCBrain.py -f <freesurfer_sub> -a <USCBrain>'
-      sys.exit(2)
-   for opt, arg in opts:
-      if opt == '-h':
-         print 'python freesurfer_label_USCBrain.py -f <freesurfer_sub> -a <USCBrain>'
-         sys.exit()
-      elif opt in ("-f", "--ffile"):
-         subbasename = arg
-      elif opt in ("-a", "--afile"):
-         USCBrainpath = arg
-   print 'FreeSurfer subid is "', subbasename
-   print 'USCBrain dir is "', USCBrainpath
+    try:
+        opts, args = getopt.getopt(argv, "hf:a:", ["ifile=", "ofile="])
+    except getopt.GetoptError:
+        print 'python freesurfer_label_USCBrain.py -f <freesurfer_sub>\
+-a <USCBrain>'
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print('python freesurfer_label_USCBrain.py -f \
+<freesurfer_sub> -a <USCBrain>')
+            sys.exit()
+        elif opt in ("-f", "--ffile"):
+            subbasename = arg
+        elif opt in ("-a", "--afile"):
+            USCBrainpath = arg
+    print('FreeSurfer subid is :' + subbasename)
+    print('USCBrain dir is :' + USCBrainpath)
 #   subbasename = inputfile #'/big_disk/ajoshi/fs_dir/co20050723_\
 ##    090747MPRAGET1Coronals002a001'
 #   USCBrainpath = outputfile #'/big_disk/ajoshi/coding_ground/svreg/USCBrain'
 ##    #'/big_disk/ajoshi/fs_sub/co20050723_110235Flash3Dt1CORONALs002a001'
-   hemi = 'right'
-   fshemi = 'rh'
+    hemi = 'right'
+    fshemi = 'rh'
 
-   class s:
-       pass
+    class s:
+        pass
 
-   class bci:
-       pass
-    
-   for hi in range(2):
-       if hi == 0:
-           hemi = 'right'
-           fshemi = 'rh'
-       else:
-           hemi = 'left'
-           fshemi = 'lh'
-   
-       ''' USCBrain to FS processed BCI '''
-       bci_bsti = readdfs(USCBrainpath +
-                          '/BCI-DNI_brain.' + hemi + '.mid.cortex.dfs')
-       bci_bst = readdfs(USCBrainpath + '/BCI-DNI_brain.' +
-                         hemi + '.inner.cortex.dfs')
-       bci_bst.labels = bci_bsti.labels
-       bci_bst.vertices[:, 0] -= 96*0.8
-       bci_bst.vertices[:, 1] -= 192*0.546875
-       bci_bst.vertices[:, 2] -= 192*0.546875
-       bci.vertices, bci.faces = fsio.read_geometry('/big_disk/ajoshi/data/BCI_\
+    class bci:
+        pass
+
+    for hi in range(2):
+        if hi == 0:
+            hemi = 'right'
+            fshemi = 'rh'
+        else:
+            hemi = 'left'
+            fshemi = 'lh'
+
+        ''' USCBrain to FS processed BCI '''
+        bci_bsti = readdfs(USCBrainpath +
+                           '/BCI-DNI_brain.' + hemi + '.mid.cortex.dfs')
+        bci_bst = readdfs(USCBrainpath + '/BCI-DNI_brain.' +
+                          hemi + '.inner.cortex.dfs')
+        bci_bst.labels = bci_bsti.labels
+        bci_bst.vertices[:, 0] -= 96*0.8
+        bci_bst.vertices[:, 1] -= 192*0.546875
+        bci_bst.vertices[:, 2] -= 192*0.546875
+        bci.vertices, bci.faces = fsio.read_geometry('/big_disk/ajoshi/data/BCI_\
 DNI_Atlas/surf/' + fshemi + '.white')
-       bci = interpolate_labels_colors(bci_bst, bci)
-   
-       ''' FS_BCI to FS BCI Sphere'''
-       bci.vertices, bci.faces = fsio.read_geometry('/big_disk/ajoshi/data/BCI_\
+        bci = interpolate_labels_colors(bci_bst, bci)
+
+        ''' FS_BCI to FS BCI Sphere'''
+        bci.vertices, bci.faces = fsio.read_geometry('/big_disk/ajoshi/data/BCI_\
 DNI_Atlas/surf/' + fshemi + '.sphere.reg')
-   
-       ''' FS BCI Sphere to SUB FS Sphere'''
-   
-       s.vertices, s.faces = fsio.read_geometry(subbasename +
-                                                '/surf/' + fshemi + '.sphere.reg')
-       s = interpolate_labels_colors(bci, s)
-       fslabels, _, _ = fsio.read_annot(subbasename +
-                                        '/label/' + fshemi + '.aparc.annot')
-       s.labels = s.labels * sp.int16(fslabels > 0)
-       s.vColor[fslabels <= 0, :] = 0.5
-       s.vertices, _ = fsio.read_geometry(subbasename + '/surf/' +
-                                          fshemi + '.pial')
-       so, _ = fsio.read_geometry(subbasename + '/surf/' + fshemi + '.white')
-       s.vertices = (s.vertices + so)/2.0
-   #    view_patch_vtk(s)
-       s.faces = s.faces[:, (0, 2, 1)]
-       writedfs(subbasename + '/' + hemi + '.mid.cortex.fs.dfs', s)
+
+        ''' FS BCI Sphere to SUB FS Sphere'''
+        s.vertices, s.faces = fsio.read_geometry(subbasename +
+                                                 '/surf/' + fshemi +
+                                                 '.sphere.reg')
+        s = interpolate_labels_colors(bci, s)
+        fslabels, _, _ = fsio.read_annot(subbasename +
+                                         '/label/' + fshemi + '.aparc.annot')
+        s.labels = s.labels * sp.int16(fslabels > 0)
+        s.vColor[fslabels <= 0, :] = 0.5
+        s.vertices, _ = fsio.read_geometry(subbasename + '/surf/' +
+                                           fshemi + '.pial')
+        so, _ = fsio.read_geometry(subbasename + '/surf/' + fshemi + '.white')
+        s.vertices = (s.vertices + so)/2.0
+        s.faces = s.faces[:, (0, 2, 1)]
+        writedfs(subbasename + '/' + hemi + '.mid.cortex.fs.dfs', s)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
