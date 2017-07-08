@@ -2,10 +2,27 @@
 
 # -*- coding: utf-8 -*-
 """
-Created on Tue Aug 16 15:51:16 2016
-
-@author: ajoshi
+% Copyright (C) 2017 The Regents of the University of California and the University of Southern California
+% Created by Anand A. Joshi, David W. Shattuch and Richard M. Leahy
+%
+% This program is free software; you can redistribute it and/or
+% modify it under the terms of the GNU General Public License
+% as published by the Free Software Foundation; version 2.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program; if not, write to the Free Software
+% Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+% USA.
 """
+__author__ = "Anand A Joshi"
+__copyright__ = "Copyright 2017, University of Southern California"
+__email__ = "ajoshi@usc.edu"
+
 import nibabel.freesurfer.io as fsio
 from dfsio import writedfs, readdfs
 import os
@@ -14,12 +31,6 @@ import scipy as sp
 import sys
 import getopt
 
-#==============================================================================
-# p_dir_ref = '/big_disk/ajoshi/HCP_data'
-# ref_dir = os.path.join(p_dir_ref, 'reference')
-# ref = '100307'
-# 
-#==============================================================================
 
 def interpolate_labels_colors(fromsurf=[], tosurf=[], skipzero=0):
     ''' interpolate labels from surface to to surface'''
@@ -57,10 +68,6 @@ def main(argv):
             USCBrainpath = arg
     print('FreeSurfer subid is :' + subbasename)
     print('USCBrain dir is :' + USCBrainpath)
-#   subbasename = inputfile #'/big_disk/ajoshi/fs_dir/co20050723_\
-##    090747MPRAGET1Coronals002a001'
-#   USCBrainpath = outputfile #'/big_disk/ajoshi/coding_ground/svreg/USCBrain'
-##    #'/big_disk/ajoshi/fs_sub/co20050723_110235Flash3Dt1CORONALs002a001'
     hemi = 'right'
     fshemi = 'rh'
 
@@ -107,10 +114,14 @@ def main(argv):
         so, _ = fsio.read_geometry(subbasename + '/surf/' + fshemi + '.white')
         s.vertices = (s.vertices + so)/2.0
         s.faces = s.faces[:, (0, 2, 1)]
-        writedfs(subbasename + '/' + hemi + '.mid.cortex.fs.dfs', s)
+        outfilename = subbasename + '/' + hemi + '.mid.cortex.fs.dfs'
+        writedfs(outfilename, s)
+        print('output file is : ' + outfilename)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+    print('Done')
+
 
 
 
