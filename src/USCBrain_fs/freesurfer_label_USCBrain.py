@@ -43,8 +43,8 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv, "hf:a:", ["ifile=", "ofile="])
     except getopt.GetoptError:
-        print 'python freesurfer_label_USCBrain.py -f <freesurfer_sub>\
--a <USCBrain>'
+        print('python freesurfer_label_USCBrain.py -f <freesurfer_sub>\
+-a <USCBrain>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
