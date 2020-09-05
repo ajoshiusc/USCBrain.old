@@ -131,4 +131,4 @@ vol_img_new[ind] = t.labels
 
 new_img = ni.new_img_like(vol_lab_new, vol_img_new)
 new_img.to_filename(USCBrainbaseLatest +
-                    '/BCI-DNI_brain.label.nii.gz')
+                    '/BCI-DNI_brain.precent_bci.label.nii.gz')
