@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 
 
 from fmri_methods_sipi import interpolate_labels
-from dfsio import readdfs
+from dfsio import readdfs, writedfs
 import numpy as np
 
 from nilearn import image as ni
@@ -27,8 +27,11 @@ def build_dict_rois(xmlfile):
     return roi_dict
 
 
-def check_uscbrain_bci(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict):
+def check_uscbrain_bci(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict, tiny_threhsold=100):
     print(' This checks each USCBrain ROI has only 1 BCI ROI. If not it prints a message.')
+    print(' It returns indices of overlap of rois with tiny overlapping regions.')
+
+    error_indicator = np.zeros(len(uscbrain_lab_vol))
 
     for uscbrain_lab in uscbrain_dict:
 
@@ -49,9 +52,17 @@ def check_uscbrain_bci(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict):
                       (uscbrain_lab, uscbrain_dict[uscbrain_lab]))
                 print(bci_lab, bci_dict[bci_lab], lab_counts[j])
 
+            error_indicator += (lab_counts[j] < tiny_threhsold) & (bci_lab_vol ==
+                                                             bci_lab) & (uscbrain_lab_vol == uscbrain_lab)
 
-def check_bci_uscbrain(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict):
+    return error_indicator
+
+
+def check_bci_uscbrain(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict, tiny_threhsold=100):
     print(' We will check if each BCI ROI has max 3 USCBrain ROIs. If not it prints a message.')
+    print(' It returns indices of overlap of rois with tiny overlapping regions.')
+
+    error_indicator = np.zeros(len(uscbrain_lab_vol))
 
     for bci_lab in bci_dict:
 
@@ -72,6 +83,40 @@ def check_bci_uscbrain(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict):
 
                 print(uscbrain_lab,
                       uscbrain_dict[uscbrain_lab], lab_counts[j])
+
+            error_indicator += (lab_counts[j] < tiny_threhsold) & (bci_lab_vol ==
+                                                             bci_lab) & (uscbrain_lab_vol == uscbrain_lab)
+
+    return error_indicator
+
+
+def surf_lab_match_bci_uscbrain(uscbrain, uscbrain_dict, bci, bci_dict, error_ind):
+
+    uscbrain_new = copy.deepcopy(uscbrain)
+    
+    class from_surf:
+        pass
+
+    class to_surf:
+        pass
+
+    for bci_lab in bci_dict:
+
+        lab_ind = (bci.labels == bci_lab)
+
+        error_ind=np.array(error_ind,dtype=bool)
+
+        to_ind = lab_ind & error_ind
+        from_ind = lab_ind & (~error_ind)
+        
+        from_surf.vertices = uscbrain.vertices[from_ind,:]
+        to_surf.vertices = uscbrain.vertices[to_ind,:]
+        from_surf.labels = uscbrain.labels[from_ind]
+
+        to_surf = interpolate_labels(from_surf, to_surf)
+        uscbrain_new.labels[to_ind] = to_surf.labels
+
+    return uscbrain_new
 
 
 BCIbase = '/ImagePTE1/ajoshi/code_farm/svreg/BCI-DNI_brain_atlas'
@@ -96,35 +141,56 @@ check_bci_uscbrain(uscbrain.get_fdata().flatten(),
                    uscbrain_dict, bci.get_fdata().flatten(), bci_dict)
 
 '''
+class error_surf:
+    pass
+
 # Left hemisphere surface
 print('=====Checking Left Hemisphere Surface=====')
 
 uscbrain = readdfs(USCBrainbaseLatest +
-                       '/BCI-DNI_brain.left.mid.cortex.dfs')
+                   '/BCI-DNI_brain.left.mid.cortex.dfs')
 
 bci = readdfs(BCIbase + '/BCI-DNI_brain.left.mid.cortex.dfs')
 
-'''
-check_uscbrain_bci(uscbrain.labels.flatten(),
+error_indicator1 = check_uscbrain_bci(uscbrain.labels.flatten(),
                    uscbrain_dict, bci.labels.flatten(), bci_dict)
-'''
 
-check_bci_uscbrain(uscbrain.labels.flatten(),
-                   uscbrain_dict, bci.labels.flatten(), bci_dict)
+error_indicator2 = check_bci_uscbrain(uscbrain.labels.flatten(),
+                                     uscbrain_dict, bci.labels.flatten(), bci_dict)
+                                     
+error_surf.vertices = bci.vertices
+error_surf.faces = bci.faces
+error_surf.attributes = 255.0*error_indicator1
+error_surf.labels = error_indicator1
+
+writedfs('error_left.dfs', error_surf)
+
+out_surf = surf_lab_match_bci_uscbrain(uscbrain, uscbrain_dict, bci, bci_dict, error_indicator1)
+
+writedfs(USCBrainbaseLatest + '/BCI-DNI_brain.left.mid.cortex_bci_consistent.dfs', out_surf)
+
 
 # Right hemisphere surface
 print('=====Checking Right Hemisphere Surface=====')
 
 uscbrain = readdfs(USCBrainbaseLatest +
-                       '/BCI-DNI_brain.right.mid.cortex.dfs')
+                   '/BCI-DNI_brain.right.mid.cortex.dfs')
 
 bci = readdfs(BCIbase + '/BCI-DNI_brain.right.mid.cortex.dfs')
 
-check_uscbrain_bci(uscbrain.labels.flatten(),
+error_indicator1 = check_uscbrain_bci(uscbrain.labels.flatten(),
                    uscbrain_dict, bci.labels.flatten(), bci_dict)
 
-check_bci_uscbrain(uscbrain.labels.flatten(),
-                   uscbrain_dict, bci.labels.flatten(), bci_dict)
+error_indicator2 = check_bci_uscbrain(uscbrain.labels.flatten(),
+                                     uscbrain_dict, bci.labels.flatten(), bci_dict)
 
+error_surf.vertices = bci.vertices
+error_surf.faces = bci.faces
+error_surf.attributes = 255.0*error_indicator1
+error_surf.labels = error_indicator1
 
+writedfs('error_right.dfs', error_surf)
 
+out_surf = surf_lab_match_bci_uscbrain(uscbrain, uscbrain_dict, bci, bci_dict, error_indicator1)
+
+writedfs(USCBrainbaseLatest + '/BCI-DNI_brain.right.mid.cortex_bci_consistent.dfs', out_surf)
