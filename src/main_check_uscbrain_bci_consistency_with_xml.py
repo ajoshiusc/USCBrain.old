@@ -28,7 +28,7 @@ def build_dict_rois(xmlfile):
 
 
 def check_uscbrain_bci(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict):
-    # This checks each USCBrain ROI has only 1 BCI ROI. If not it prints a message.
+    print(' This checks each USCBrain ROI has only 1 BCI ROI. If not it prints a message.')
 
     for uscbrain_lab in uscbrain_dict:
 
@@ -51,7 +51,7 @@ def check_uscbrain_bci(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict):
 
 
 def check_bci_uscbrain(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict):
-    # This checks each BCI ROI has max 3 USCBrain ROIs. If not it prints a message.
+    print(' We will check if each BCI ROI has max 3 USCBrain ROIs. If not it prints a message.')
 
     for bci_lab in bci_dict:
 
@@ -88,13 +88,14 @@ uscbrain = ni.load_img(USCBrainbaseLatest +
 
 bci = ni.load_img(BCIbase + '/BCI-DNI_brain.label.nii.gz')
 
+'''
 check_uscbrain_bci(uscbrain.get_fdata().flatten(),
                    uscbrain_dict, bci.get_fdata().flatten(), bci_dict)
 
 check_bci_uscbrain(uscbrain.get_fdata().flatten(),
                    uscbrain_dict, bci.get_fdata().flatten(), bci_dict)
 
-
+'''
 # Left hemisphere surface
 print('=====Checking Left Hemisphere Surface=====')
 
@@ -103,8 +104,10 @@ uscbrain = readdfs(USCBrainbaseLatest +
 
 bci = readdfs(BCIbase + '/BCI-DNI_brain.left.mid.cortex.dfs')
 
+'''
 check_uscbrain_bci(uscbrain.labels.flatten(),
                    uscbrain_dict, bci.labels.flatten(), bci_dict)
+'''
 
 check_bci_uscbrain(uscbrain.labels.flatten(),
                    uscbrain_dict, bci.labels.flatten(), bci_dict)
