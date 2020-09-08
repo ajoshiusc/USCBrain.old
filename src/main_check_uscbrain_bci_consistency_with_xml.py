@@ -1,4 +1,4 @@
-# %% This script corrects the labels of central gray structures which seem to be mislabeled in the USCBrain atlas
+# %% This script checks consistency of BCI and USCBrain labels. The BCI label should be substring of USCBrain label
 import xml.etree.ElementTree as ET
 
 
