@@ -53,7 +53,7 @@ def check_uscbrain_bci(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict, t
                 print(bci_lab, bci_dict[bci_lab], lab_counts[j])
 
             error_indicator += (lab_counts[j] < tiny_threhsold) & (bci_lab_vol ==
-                                                             bci_lab) & (uscbrain_lab_vol == uscbrain_lab)
+                                                                   bci_lab) & (uscbrain_lab_vol == uscbrain_lab)
 
     return error_indicator
 
@@ -85,7 +85,7 @@ def check_bci_uscbrain(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict, t
                       uscbrain_dict[uscbrain_lab], lab_counts[j])
 
             error_indicator += (lab_counts[j] < tiny_threhsold) & (bci_lab_vol ==
-                                                             bci_lab) & (uscbrain_lab_vol == uscbrain_lab)
+                                                                   bci_lab) & (uscbrain_lab_vol == uscbrain_lab)
 
     return error_indicator
 
@@ -93,7 +93,7 @@ def check_bci_uscbrain(uscbrain_lab_vol, uscbrain_dict, bci_lab_vol, bci_dict, t
 def surf_lab_match_bci_uscbrain(uscbrain, uscbrain_dict, bci, bci_dict, error_ind):
 
     uscbrain_new = copy.deepcopy(uscbrain)
-    
+
     class from_surf:
         pass
 
@@ -104,13 +104,13 @@ def surf_lab_match_bci_uscbrain(uscbrain, uscbrain_dict, bci, bci_dict, error_in
 
         lab_ind = (bci.labels == bci_lab)
 
-        error_ind=np.array(error_ind,dtype=bool)
+        error_ind = np.array(error_ind, dtype=bool)
 
         to_ind = lab_ind & error_ind
         from_ind = lab_ind & (~error_ind)
-        
-        from_surf.vertices = uscbrain.vertices[from_ind,:]
-        to_surf.vertices = uscbrain.vertices[to_ind,:]
+
+        from_surf.vertices = uscbrain.vertices[from_ind, :]
+        to_surf.vertices = uscbrain.vertices[to_ind, :]
         from_surf.labels = uscbrain.labels[from_ind]
 
         to_surf = interpolate_labels(from_surf, to_surf)
@@ -133,16 +133,20 @@ uscbrain = ni.load_img(USCBrainbaseLatest +
 
 bci = ni.load_img(BCIbase + '/BCI-DNI_brain.label.nii.gz')
 
-'''
-check_uscbrain_bci(uscbrain.get_fdata().flatten(),
-                   uscbrain_dict, bci.get_fdata().flatten(), bci_dict)
 
-check_bci_uscbrain(uscbrain.get_fdata().flatten(),
-                   uscbrain_dict, bci.get_fdata().flatten(), bci_dict)
+error_indicator1 = check_uscbrain_bci(uscbrain.get_fdata().flatten(),
+                                      uscbrain_dict, bci.get_fdata().flatten(), bci_dict, tiny_threhsold=80)
 
-'''
+error_indicator2 = check_bci_uscbrain(uscbrain.get_fdata().flatten(),
+                                      uscbrain_dict, bci.get_fdata().flatten(), bci_dict, tiny_threhsold=80)
+
+v = ni.new_img_like(bci, error_indicator1.reshape(bci.shape))
+v.to_filename('errorvol.nii.gz')
+
+
 class error_surf:
     pass
+
 
 # Left hemisphere surface
 print('=====Checking Left Hemisphere Surface=====')
@@ -153,11 +157,11 @@ uscbrain = readdfs(USCBrainbaseLatest +
 bci = readdfs(BCIbase + '/BCI-DNI_brain.left.mid.cortex.dfs')
 
 error_indicator1 = check_uscbrain_bci(uscbrain.labels.flatten(),
-                   uscbrain_dict, bci.labels.flatten(), bci_dict)
+                                      uscbrain_dict, bci.labels.flatten(), bci_dict)
 
 error_indicator2 = check_bci_uscbrain(uscbrain.labels.flatten(),
-                                     uscbrain_dict, bci.labels.flatten(), bci_dict)
-                                     
+                                      uscbrain_dict, bci.labels.flatten(), bci_dict)
+
 error_surf.vertices = bci.vertices
 error_surf.faces = bci.faces
 error_surf.attributes = 255.0*error_indicator1
@@ -165,9 +169,11 @@ error_surf.labels = error_indicator1
 
 writedfs('error_left.dfs', error_surf)
 
-out_surf = surf_lab_match_bci_uscbrain(uscbrain, uscbrain_dict, bci, bci_dict, error_indicator1)
+out_surf = surf_lab_match_bci_uscbrain(
+    uscbrain, uscbrain_dict, bci, bci_dict, error_indicator1)
 
-writedfs(USCBrainbaseLatest + '/BCI-DNI_brain.left.mid.cortex_bci_consistent.dfs', out_surf)
+writedfs(USCBrainbaseLatest +
+         '/BCI-DNI_brain.left.mid.cortex_bci_consistent.dfs', out_surf)
 
 
 # Right hemisphere surface
@@ -179,10 +185,10 @@ uscbrain = readdfs(USCBrainbaseLatest +
 bci = readdfs(BCIbase + '/BCI-DNI_brain.right.mid.cortex.dfs')
 
 error_indicator1 = check_uscbrain_bci(uscbrain.labels.flatten(),
-                   uscbrain_dict, bci.labels.flatten(), bci_dict)
+                                      uscbrain_dict, bci.labels.flatten(), bci_dict)
 
 error_indicator2 = check_bci_uscbrain(uscbrain.labels.flatten(),
-                                     uscbrain_dict, bci.labels.flatten(), bci_dict)
+                                      uscbrain_dict, bci.labels.flatten(), bci_dict)
 
 error_surf.vertices = bci.vertices
 error_surf.faces = bci.faces
@@ -191,6 +197,8 @@ error_surf.labels = error_indicator1
 
 writedfs('error_right.dfs', error_surf)
 
-out_surf = surf_lab_match_bci_uscbrain(uscbrain, uscbrain_dict, bci, bci_dict, error_indicator1)
+out_surf = surf_lab_match_bci_uscbrain(
+    uscbrain, uscbrain_dict, bci, bci_dict, error_indicator1)
 
-writedfs(USCBrainbaseLatest + '/BCI-DNI_brain.right.mid.cortex_bci_consistent.dfs', out_surf)
+writedfs(USCBrainbaseLatest +
+         '/BCI-DNI_brain.right.mid.cortex_bci_consistent.dfs', out_surf)
