@@ -120,7 +120,7 @@ def surf_lab_match_bci_uscbrain(uscbrain, uscbrain_dict, bci, bci_dict, error_in
 
 
 BCIbase = '/ImagePTE1/ajoshi/code_farm/svreg/BCI-DNI_brain_atlas'
-USCBrainbaseLatest = '/ImagePTE1/ajoshi/code_farm/hybridatlas/USCBrain_9_3_2020'
+USCBrainbaseLatest = '/ImagePTE1/ajoshi/code_farm/hybridatlas/USCBrain_9_8_2020'
 
 bci_dict = build_dict_rois(BCIbase+'/brainsuite_labeldescription.xml')
 uscbrain_dict = build_dict_rois(
@@ -129,7 +129,7 @@ uscbrain_dict = build_dict_rois(
 
 # Volume check
 uscbrain = ni.load_img(USCBrainbaseLatest +
-                       '/BCI-DNI_brain.precent_bci_idcorr.label.nii.gz')
+                       '/BCI-DNI_brain.label.nii.gz')
 
 bci = ni.load_img(BCIbase + '/BCI-DNI_brain.label.nii.gz')
 
@@ -142,6 +142,7 @@ error_indicator2 = check_bci_uscbrain(uscbrain.get_fdata().flatten(),
 
 v = ni.new_img_like(bci, error_indicator1.reshape(bci.shape))
 v.to_filename('errorvol.nii.gz')
+print('Tiny region overlaps: %d or %d '%(np.sum(error_indicator1),np.sum(error_indicator2)))
 
 
 class error_surf:
@@ -175,7 +176,7 @@ out_surf = surf_lab_match_bci_uscbrain(
 writedfs(USCBrainbaseLatest +
          '/BCI-DNI_brain.left.mid.cortex_bci_consistent.dfs', out_surf)
 
-
+print('Tiny region overlaps: %d or %d '%(np.sum(error_indicator1),np.sum(error_indicator2)))
 # Right hemisphere surface
 print('=====Checking Right Hemisphere Surface=====')
 
@@ -202,3 +203,5 @@ out_surf = surf_lab_match_bci_uscbrain(
 
 writedfs(USCBrainbaseLatest +
          '/BCI-DNI_brain.right.mid.cortex_bci_consistent.dfs', out_surf)
+
+print('Tiny region overlaps: %d or %d '%(np.sum(error_indicator1),np.sum(error_indicator2)))
