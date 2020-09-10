@@ -28,7 +28,7 @@ for i, l in enumerate(old_labs):
     new_vol[old_vol == l] = new_labs[i]
 
 
-v = ni.new_img_like(v,new_vol)
+v = ni.new_img_like(v, np.array(new_vol, dtype='int16'))
 
-v.to_filename(USCBrainbaseLatest+'/BCI-DNI_brain.precent_bci_idcorr.label.nii.gz')
-
+v.to_filename(USCBrainbaseLatest +
+              '/BCI-DNI_brain.precent_bci_idcorr.label.nii.gz')

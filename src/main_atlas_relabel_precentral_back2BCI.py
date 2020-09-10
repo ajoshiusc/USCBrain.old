@@ -129,6 +129,7 @@ t = interpolate_labels(fromsurf=f, tosurf=t)
 vol_img_new[ind] = t.labels
 
 
-new_img = ni.new_img_like(vol_lab_new, vol_img_new)
+new_img = ni.new_img_like(vol_lab_new, np.array(vol_img_new, dtype='int16'))
+# new_img.set_data_dtype(vol_lab_new.get_data_dtype())
 new_img.to_filename(USCBrainbaseLatest +
                     '/BCI-DNI_brain.precent_bci.label.nii.gz')
