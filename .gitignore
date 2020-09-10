@@ -102,3 +102,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+USCBrain.zip
+USCBrain_anand_8_29.zip
+src/.vscode/launch.json
+.gitignore
+.gitignore

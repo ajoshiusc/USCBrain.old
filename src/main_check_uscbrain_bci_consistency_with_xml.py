@@ -1,4 +1,4 @@
-# %% This script corrects the labels of central gray structures which seem to be mislabeled in the USCBrain atlas
+# %% This script checks consistency of BCI and USCBrain labels. The BCI label should be substring of USCBrain label
 import xml.etree.ElementTree as ET
 
 
@@ -204,5 +204,5 @@ if __name__ == "__main__":
     writedfs(USCBrainbaseLatest +
              '/BCI-DNI_brain.right.mid.cortex_bci_consistent.dfs', out_surf)
 
-    print('Tiny region overlaps: %d or %d ' %
+    print('Tiny region overlaps: %d or %d' %
           (np.sum(error_indicator1), np.sum(error_indicator2)))
