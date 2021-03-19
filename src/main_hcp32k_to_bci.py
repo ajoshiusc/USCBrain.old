@@ -49,7 +49,7 @@ class bci:
 inputfile = '/big_disk/ajoshi/data/Glasser_et_al_2016_HCP_MMP1.0_RVVG/HCP_Phase\
 Two/Q1-Q6_RelatedParcellation210/MNINonLinear/fsaverage_LR32k/Q1-Q6_Related\
 Parcellation210.L.CorticalAreas_dil_Colors.32k_fs_LR.dlabel.nii'
-outputfile = 'BCI_DNI_Glasser_v2.mid.left.dfs'
+outputfile = 'BCI_DNI_Glasser.mid.left.dfs'
 
 labs = nib.load(inputfile)
 
@@ -99,10 +99,10 @@ bci.vertices, bci.faces = fsio.read_geometry('/big_disk/ajoshi/fs_sub/BCI_DNI_At
 bci = patch_color_labels(bci)
 view_patch_vtk(bci)
 
-writedfs('BCI_pial_lh_v2.dfs.', bci)
+writedfs('BCI_pial_lh.dfs.', bci)
 
 bci.vertices, bci.faces = fsio.read_geometry('/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/lh.white')
-writedfs('BCI_white_lh_v2.dfs.', bci)
+writedfs('BCI_white_lh.dfs.', bci)
 
 
 bci.vertices[:, 0] += 96*0.8
