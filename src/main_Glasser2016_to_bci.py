@@ -49,7 +49,7 @@ class bci:
 inputfile = '/big_disk/ajoshi/data/Glasser_et_al_2016_HCP_MMP1.0_RVVG/HCP_Phase\
 Two/Q1-Q6_RelatedParcellation210/MNINonLinear/fsaverage_LR32k/Q1-Q6_Related\
 Parcellation210.L.CorticalAreas_dil_Colors.32k_fs_LR.dlabel.nii'
-outputfile = 'BCI_DNI_Glasser.mid.left.dfs'
+outbasename = 'BCI_DNI_Glasser'
 
 labs = nib.load(inputfile)
 
@@ -115,5 +115,15 @@ bci_bst.vertices=bci_bst_mid.vertices
 
 #bci_bst = smooth_patch(bci_bst, iterations=100, relaxation=.5)
 bci_bst = patch_color_labels(bci_bst)
-writedfs(outputfile, bci_bst)
+writedfs(outbasename + '.mid.left.dfs', bci_bst)
+
+bci_bst_in = readdfs('/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.left.inner.cortex.dfs')
+bci_bst.vertices=bci_bst_in.vertices
+writedfs(outbasename + '.inner.left.dfs', bci_bst)
+
+bci_bst_p = readdfs('/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.left.pial.cortex.dfs')
+bci_bst.vertices = bci_bst_p.vertices
+writedfs(outbasename + '.pial.left.dfs', bci_bst)
+
+
 view_patch_vtk(bci_bst)
