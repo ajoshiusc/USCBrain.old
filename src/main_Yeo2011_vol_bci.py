@@ -11,7 +11,7 @@ import scipy as sp
 import nibabel as nib
 from nilearn import image
 
-subbasename = 'Yeo2011_17Networks'
+subbasename = 'Yeo2011_7Networks'
 
 left_mid = readdfs(subbasename + '.left.mid.cortex.dfs')
 right_mid = readdfs(subbasename + '.right.mid.cortex.dfs')
