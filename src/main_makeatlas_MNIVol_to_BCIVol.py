@@ -18,7 +18,6 @@ from nilearn import image
 from scipy.interpolate import interpn
 
 
-MNIVol = '/usr/share/fsl/5.0/data/atlases/JHU/JHU-ICBM-labels-1mm.nii.gz'
 MNIVol = '/home/brainsuite/dsistudio/atlas/HarvardOxfordCort.nii.gz'
 BrainSuitePath = '/home/ajoshi/BrainSuite19b'
 
@@ -28,9 +27,9 @@ map = os.path.join(BrainSuitePath, 'svreg',
                    'BCI-DNI_brain_atlas', 'map2mni.nii.gz')
 labelhdr = os.path.join(BrainSuitePath, 'svreg',
                         'BCI-DNI_brain_atlas', 'BCI-DNI_brain.label.nii.gz')
-outvol = 'BCI-JHU.label.nii.gz'
-outmidl = 'BCI-JHU.left.mid.cortex.dfs'
-outmidr = 'BCI-JHU.right.mid.cortex.dfs'
+outvol = 'BCI-HarvardOxfordCort.label.nii.gz'
+outmidl = 'BCI-HarvardOxfordCort.left.mid.cortex.dfs'
+outmidr = 'BCI-HarvardOxfordCort.right.mid.cortex.dfs'
 
 
 lmid = os.path.join(BrainSuitePath, 'svreg',
@@ -64,6 +63,10 @@ sl.labels = interpn((xx, yy, zz), vol_img, sl.vertices, method='nearest')
 sr.labels = interpn((xx, yy, zz), vol_img, sr.vertices, method='nearest')
 
 
-patch_color_labels(s)
+patch_color_labels(sl)
+view_patch_vtk(sl)
+patch_color_labels(sr)
+view_patch_vtk(sr)
 
-view_patch_vtk(s)
+writedfs(outmidl, sl)
+writedfs(outmidr, sr)
