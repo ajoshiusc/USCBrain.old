@@ -62,11 +62,12 @@ zz = np.arange(vol_lab.shape[2])*zres
 sl.labels = interpn((xx, yy, zz), vol_img, sl.vertices, method='nearest')
 sr.labels = interpn((xx, yy, zz), vol_img, sr.vertices, method='nearest')
 
+sl = smooth_patch(sl,3000)
+sr = smooth_patch(sr,3000)
 
 patch_color_labels(sl)
 view_patch_vtk(sl)
 patch_color_labels(sr)
 view_patch_vtk(sr)
-
 writedfs(outmidl, sl)
 writedfs(outmidr, sr)
