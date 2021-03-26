@@ -65,7 +65,7 @@ for hemi in {'left', 'right'}:
 
     bci_bst = interpolate_labels(bci, bci_bst)
     bci_bst_mid.labels = bci_bst.labels
-    bci_bst_mid = smooth_patch(bci_bst_mid, 6000)
+    #bci_bst_mid = smooth_patch(bci_bst_mid, 6000)
     bci_bst_labels = patch_color_labels(bci_bst_mid)
     view_patch_vtk(bci_bst_labels)
     writedfs(outfile, bci_bst_labels)
