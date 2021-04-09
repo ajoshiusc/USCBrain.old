@@ -11,14 +11,18 @@ import scipy as sp
 import nibabel as nib
 from nilearn import image
 
-subbasename = 'Yeo2011_7Networks'
+subbasename = 'Yeo2011_17Networks'
+bcibase = '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain'
 
-left_mid = readdfs(subbasename + '.left.mid.cortex.dfs')
-right_mid = readdfs(subbasename + '.right.mid.cortex.dfs')
-left_inner = readdfs(subbasename + '.left.inner.cortex.dfs')
-right_inner = readdfs(subbasename + '.right.inner.cortex.dfs')
-left_pial = readdfs(subbasename + '.left.pial.cortex.dfs')
-right_pial = readdfs(subbasename + '.right.pial.cortex.dfs')
+left_mid = readdfs(bcibase + '.left.mid.cortex.dfs')
+right_mid = readdfs(bcibase + '.right.mid.cortex.dfs')
+left_inner = readdfs(bcibase + '.left.inner.cortex.dfs')
+right_inner = readdfs(bcibase + '.right.inner.cortex.dfs')
+left_pial = readdfs(bcibase + '.left.pial.cortex.dfs')
+right_pial = readdfs(bcibase + '.right.pial.cortex.dfs')
+left_lab = readdfs(subbasename + '.left.mid.cortex.dfs')
+right_lab = readdfs(subbasename + '.right.mid.cortex.dfs')
+
 
 r1_vert = (right_pial.vertices + right_mid.vertices)/2.0
 r2_vert = (right_inner.vertices + right_mid.vertices)/2.0
@@ -62,11 +66,11 @@ f.vertices = np.concatenate((left_mid.vertices, right_mid.vertices,
                              left_pial.vertices, right_pial.vertices,
                              l1_vert, r1_vert, l2_vert, r2_vert))
 
-f.labels = np.concatenate((left_mid.labels, right_mid.labels,
-                           left_mid.labels, right_mid.labels,
-                           left_mid.labels, right_mid.labels,
-                           left_mid.labels, right_mid.labels,
-                           left_mid.labels, right_mid.labels))
+f.labels = np.concatenate((left_lab.labels, right_lab.labels,
+                           left_lab.labels, right_lab.labels,
+                           left_lab.labels, right_lab.labels,
+                           left_lab.labels, right_lab.labels,
+                           left_lab.labels, right_lab.labels))
 
 t = interpolate_labels(fromsurf=f, tosurf=t)
 

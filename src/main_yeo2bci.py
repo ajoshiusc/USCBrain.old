@@ -6,7 +6,7 @@ Created on Tue Aug 16 15:51:16 2016
 """
 import scipy as sp
 import nibabel.freesurfer.io as fsio
-from surfproc import view_patch_vtk, patch_color_labels
+from surfproc import view_patch_vtk, patch_color_labels, smooth_patch
 from dfsio import writedfs, readdfs
 from nibabel.gifti.giftiio import read as gread
 import os
@@ -15,7 +15,7 @@ from scipy.spatial import cKDTree
 
 p_dir_ref='/home/ajoshi/HCP_data'
 ref_dir = os.path.join(p_dir_ref, 'reference')
-outbasename = 'Yeo2011_7Networks'
+outbasename = 'Yeo2011_17Networks'
 
 
 
@@ -33,8 +33,8 @@ def multidim_intersect(arr1, arr2):
     intersected = sp.intersect1d(arr1_view, arr2_view)
     return intersected.view(arr1.dtype).reshape(-1, arr1.shape[1])
 
-inputfile='/big_disk/ajoshi/data/Yeo_JNeurophysiol11_FreeSurfer/fsaverage/label/rh.Yeo2011_7Networks_N1000.annot'
-fsavesurf='/big_disk/ajoshi/data/Yeo_JNeurophysiol11_FreeSurfer/fsaverage/surf/rh.sphere.reg.avg'
+inputfile='/big_disk/ajoshi/freesurfer/subjects/fsaverage/label/rh.Yeo2011_17Networks_N1000.annot'
+fsavesurf='/big_disk/ajoshi/freesurfer/subjects/fsaverage/surf/rh.sphere.reg.avg'
 yeomap,_,_=fsio.read_annot(inputfile)
 vert,faces=fsaverage_surf=fsio.read_geometry(fsavesurf)
 class s:
@@ -82,19 +82,9 @@ bci_bst_mid = readdfs(
     '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.right.mid.cortex.dfs')
 bci_bst.vertices = bci_bst_mid.vertices
 
-#bci_bst = smooth_patch(bci_bst, iterations=100, relaxation=.5)
+bci_bst = smooth_patch(bci_bst, iterations=3000, relaxation=.5)
 bci_bst = patch_color_labels(bci_bst)
 writedfs(outbasename + '.right.mid.cortex.dfs', bci_bst)
-
-bci_bst_in = readdfs(
-    '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.right.inner.cortex.dfs')
-bci_bst.vertices = bci_bst_in.vertices
-writedfs(outbasename + '.right.inner.cortex.dfs', bci_bst)
-
-bci_bst_p = readdfs(
-    '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.right.pial.cortex.dfs')
-bci_bst.vertices = bci_bst_p.vertices
-writedfs(outbasename + '.right.pial.cortex.dfs', bci_bst)
 
 
 view_patch_vtk(bci_bst)
