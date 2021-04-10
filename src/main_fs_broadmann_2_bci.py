@@ -46,15 +46,13 @@ for hemi in {'left', 'right'}:
 
     ''' BCI to FS processed BCI '''
     bci_bsti = readdfs(
-        '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.' + hemi + '.mid.cortex.dfs')
-    bci_bst = readdfs(
         '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.' + hemi + '.inner.cortex.dfs')
     bci_bst_mid = readdfs(
-        '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.' + hemi + '.inner.cortex.dfs')
+        '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.' + hemi + '.mid.cortex.dfs')
 
-    bci_bst.vertices[:, 0] -= 96*0.8
-    bci_bst.vertices[:, 1] -= 192*0.546875
-    bci_bst.vertices[:, 2] -= 192*0.546875
+    bci_bsti.vertices[:, 0] -= 96*0.8
+    bci_bsti.vertices[:, 1] -= 192*0.546875
+    bci_bsti.vertices[:, 2] -= 192*0.546875
     bci.vertices, bci.faces = fsio.read_geometry(
         '/big_disk/ajoshi/data/BCI_DNI_Atlas/surf/' + fshemi + '.white')
     bci.labels = np.zeros(bci.vertices.shape[0])
@@ -63,9 +61,12 @@ for hemi in {'left', 'right'}:
                                  fshemi + '.' + broadmann[i] + '.thresh.label')
         bci.labels[labind] = i+1
 
-    bci_bst = interpolate_labels(bci, bci_bst)
-    bci_bst_mid.labels = bci_bst.labels
-    #bci_bst_mid = smooth_patch(bci_bst_mid, 6000)
+    bci = patch_color_labels(bci)
+    view_patch_vtk(bci)
+
+    bci_bsti = interpolate_labels(bci, bci_bsti)
+    bci_bst_mid.labels = bci_bsti.labels
+    bci_bst_mid = smooth_patch(bci_bst_mid, iterations=3000, relaxation=.5)
     bci_bst_labels = patch_color_labels(bci_bst_mid)
     view_patch_vtk(bci_bst_labels)
     writedfs(outfile, bci_bst_labels)

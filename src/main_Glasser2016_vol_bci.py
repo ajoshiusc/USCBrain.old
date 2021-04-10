@@ -12,13 +12,15 @@ import nibabel as nib
 from nilearn import image
 
 subbasename = 'BCI-DNI_Glasser2016'
-
-left_mid = readdfs(subbasename + '.left.mid.cortex.dfs')
-right_mid = readdfs(subbasename + '.right.mid.cortex.dfs')
-left_inner = readdfs(subbasename + '.left.inner.cortex.dfs')
-right_inner = readdfs(subbasename + '.right.inner.cortex.dfs')
-left_pial = readdfs(subbasename + '.left.pial.cortex.dfs')
-right_pial = readdfs(subbasename + '.right.pial.cortex.dfs')
+BCI_base = '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain'
+left_mid = readdfs(BCI_base + '.left.mid.cortex.dfs')
+right_mid = readdfs(BCI_base + '.right.mid.cortex.dfs')
+left_inner = readdfs(BCI_base + '.left.inner.cortex.dfs')
+right_inner = readdfs(BCI_base + '.right.inner.cortex.dfs')
+left_pial = readdfs(BCI_base + '.left.pial.cortex.dfs')
+right_pial = readdfs(BCI_base + '.right.pial.cortex.dfs')
+lsurf = readdfs(subbasename + '.left.mid.cortex.dfs')
+rsurf = readdfs(subbasename + '.right.mid.cortex.dfs')
 
 r1_vert = (right_pial.vertices + right_mid.vertices)/2.0
 r2_vert = (right_inner.vertices + right_mid.vertices)/2.0
@@ -62,11 +64,11 @@ f.vertices = np.concatenate((left_mid.vertices, right_mid.vertices,
                              left_pial.vertices, right_pial.vertices,
                              l1_vert, r1_vert, l2_vert, r2_vert))
 
-f.labels = np.concatenate((left_mid.labels, right_mid.labels,
-                           left_mid.labels, right_mid.labels,
-                           left_mid.labels, right_mid.labels,
-                           left_mid.labels, right_mid.labels,
-                           left_mid.labels, right_mid.labels))
+f.labels = np.concatenate((lsurf.labels, rsurf.labels,
+                           lsurf.labels, rsurf.labels,
+                           lsurf.labels, rsurf.labels,
+                           lsurf.labels, rsurf.labels,
+                           lsurf.labels, rsurf.labels))
 
 t = interpolate_labels(fromsurf=f, tosurf=t)
 
