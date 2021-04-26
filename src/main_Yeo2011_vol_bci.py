@@ -78,5 +78,5 @@ t = interpolate_labels(fromsurf=f, tosurf=t)
 vol_img = vol_img * 0
 vol_img[ind] = t.labels
 
-new_img = image.new_img_like(vol_lab, vol_img)
+new_img = image.new_img_like(vol_lab, np.int16(vol_img))
 new_img.to_filename(subbasename + '.label.nii.gz')

@@ -45,6 +45,8 @@ os.system(cmd1)
 
 
 vol_lab = image.load_img(outvol)
+vol_lab = image.new_img_like(vol_lab, np.int16(vol_lab.get_fdata()))
+vol_lab.to_filename(outvol)
 
 vol_img = vol_lab.get_fdata()
 

@@ -20,8 +20,8 @@ right_inner = readdfs(subbasename + '.right.inner.cortex.dfs')
 left_pial = readdfs(subbasename + '.left.pial.cortex.dfs')
 right_pial = readdfs(subbasename + '.right.pial.cortex.dfs')
 
-left_labels = readdfs('/ImagePTE1/ajoshi/code_farm/svreg/USCBrainMulti/parcellations/Economo/BCI-DNI_Economo.left.mid.cortex.dfs')
-right_labels = readdfs('/ImagePTE1/ajoshi/code_farm/svreg/USCBrainMulti/parcellations/Economo/BCI-DNI_Economo.right.mid.cortex.dfs')
+left_labels = readdfs('/ImagePTE1/ajoshi/code_farm/svreg/USCBrainMulti/Economo/BCI-DNI_Economo.left.mid.cortex.dfs')
+right_labels = readdfs('/ImagePTE1/ajoshi/code_farm/svreg/USCBrainMulti/Economo/BCI-DNI_Economo.right.mid.cortex.dfs')
 
 
 r1_vert = (right_pial.vertices + right_mid.vertices)/2.0
@@ -78,5 +78,5 @@ t = interpolate_labels(fromsurf=f, tosurf=t)
 vol_img = vol_img * 0
 vol_img[ind] = t.labels
 
-new_img = image.new_img_like(vol_lab, vol_img)
-new_img.to_filename('/ImagePTE1/ajoshi/code_farm/svreg/USCBrainMulti/parcellations/Economo/BCI-DNI_Economo.label.nii.gz')
+new_img = image.new_img_like(vol_lab, np.int16(vol_img))
+new_img.to_filename('/ImagePTE1/ajoshi/code_farm/svreg/USCBrainMulti/Economo/BCI-DNI_Economo.label.nii.gz')

@@ -53,6 +53,8 @@ for hemi in {'left', 'right'}:
     bci.labels = np.zeros(bci.vertices.shape[0])
     fslabels, label1, colortable1 = fsio.read_annot(
         '/big_disk/ajoshi/data/BCI_DNI_Atlas/label/' + fshemi + '.aparc.DKTatlas40.annot')
+    fslabels[fslabels<0] = 0
+
     bci.labels = fslabels
 
     bci = patch_color_labels(bci)
