@@ -48,9 +48,9 @@ class bci:
 
 inputfile = '/big_disk/ajoshi/data/Glasser_et_al_2016_HCP_MMP1.0_RVVG/HCP_Phase\
 Two/Q1-Q6_RelatedParcellation210/MNINonLinear/fsaverage_LR32k/Q1-Q6_Related\
-Parcellation210.L.CorticalAreas_dil_Colors.32k_fs_LR.dlabel.nii'
+Parcellation210.R.CorticalAreas_dil_Colors.32k_fs_LR.dlabel.nii'
 
-outbasename = 'BCI-HCP-MMP1.0'
+outbasename = 'BCI-HCP_MMP1'
 
 labs = nib.load(inputfile)
 
@@ -60,7 +60,7 @@ aa = labs.nifti_header.extensions[0].get_content()
 idxs = aa.get_axis(1).vertex
 labels = np.squeeze(labs.get_fdata())
 g_surf = nib.load('/data_disk/HCP5-fMRI-NLM/reference/100307/MNINonL\
-inear/fsaverage_LR32k/100307.L.very_inflated.32k_fs_LR.surf.gii')
+inear/fsaverage_LR32k/100307.R.very_inflated.32k_fs_LR.surf.gii')
 s.vertices = g_surf.darrays[0].data
 s.faces = g_surf.darrays[1].data
 s.labels = np.zeros(s.vertices.shape[0])
@@ -69,7 +69,7 @@ s.labels[idxs] = labels
 
 '''h32k to full res FS'''
 g_surf = nib.load('/data_disk/HCP5-fMRI-NLM/reference/100307/MNINonLinear/N\
-ative/100307.L.very_inflated.native.surf.gii')
+ative/100307.R.very_inflated.native.surf.gii')
 h.vertices = g_surf.darrays[0].data
 h.faces = g_surf.darrays[1].data
 h = interpolate_labels(s, h)
@@ -83,46 +83,46 @@ view_patch_vtk(h)
 
 ''' native FS ref to native FS BCI'''
 g_surf = nib.load('/data_disk/HCP5-fMRI-NLM/reference/100307/MNINon\
-Linear/Native/100307.L.sphere.reg.native.surf.gii')
+Linear/Native/100307.R.sphere.reg.native.surf.gii')
 s.vertices = g_surf.darrays[0].data
 s.faces = g_surf.darrays[1].data
 s.labels = h.labels
 
 ''' map to bc sphere'''
 bs.vertices, bs.faces = fsio.read_geometry(
-    '/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/lh.sphere.reg')
+    '/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/rh.sphere.reg')
 bs = interpolate_labels(s, bs)
 bci.vertices, bci.faces = fsio.read_geometry(
-    '/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/lh.white')
+    '/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/rh.white')
 bci.labels = bs.labels
-writedfs('BCI_orig_lh.dfs', bci)
+writedfs('BCI_orig_rh.dfs', bci)
 
 
 bci.vertices, bci.faces = fsio.read_geometry(
-    '/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/lh.inflated')
+    '/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/rh.inflated')
 bci = patch_color_labels(bci)
 view_patch_vtk(bci)
 
-writedfs('BCI_pial_lh.dfs.', bci)
+writedfs('BCI_pial_rh.dfs.', bci)
 
 bci.vertices, bci.faces = fsio.read_geometry(
-    '/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/lh.white')
-writedfs('BCI_white_lh.dfs.', bci)
+    '/big_disk/ajoshi/fs_sub/BCI_DNI_Atlas/surf/rh.white')
+writedfs('BCI_white_rh.dfs.', bci)
 
 
 bci.vertices[:, 0] += 96*0.8
 bci.vertices[:, 1] += 192*0.546875
 bci.vertices[:, 2] += 192*0.546875
 bci_bst = readdfs(
-    '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.left.inner.cortex.dfs')
+    '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.right.inner.cortex.dfs')
 bci_bst = interpolate_labels(bci, bci_bst)
 bci_bst_mid = readdfs(
-    '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.left.mid.cortex.dfs')
+    '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.right.mid.cortex.dfs')
 bci_bst.vertices = bci_bst_mid.vertices
 
 bci_bst = smooth_patch(bci_bst, iterations=3000, relaxation=.5)
 bci_bst = patch_color_labels(bci_bst)
-writedfs(outbasename + '.left.mid.cortex.dfs', bci_bst)
+writedfs(outbasename + '.right.mid.cortex.dfs', bci_bst)
 
 
 view_patch_vtk(bci_bst)
