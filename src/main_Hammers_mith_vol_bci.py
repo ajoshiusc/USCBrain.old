@@ -11,7 +11,7 @@ import scipy as sp
 import nibabel as nib
 from nilearn import image
 
-subbasename = 'Hammers_mith'
+subbasename = 'BCI-Hammers_mith'
 bcibase = '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain'
 
 left_mid = readdfs(bcibase + '.left.mid.cortex.dfs')
@@ -29,8 +29,7 @@ r2_vert = (right_inner.vertices + right_mid.vertices)/2.0
 l1_vert = (left_pial.vertices + left_mid.vertices)/2.0
 l2_vert = (left_inner.vertices + left_mid.vertices)/2.0
 
-vol_lab = image.load_img(
-    '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.dws.label.nii.gz')
+vol_lab = image.load_img('/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.dws.label.nii.gz')
 vol_img = vol_lab.get_fdata()
 
 xres = vol_lab.header['pixdim'][1]
@@ -51,14 +50,11 @@ Yc = Y[ind]
 Zc = Z[ind]
 v_lab = vol_img[ind]
 
-
 class t:
     pass
 
-
 class f:
     pass
-
 
 t.vertices = np.concatenate((Xc[:, None], Yc[:, None], Zc[:, None]), axis=1)
 f.vertices = np.concatenate((left_mid.vertices, right_mid.vertices,

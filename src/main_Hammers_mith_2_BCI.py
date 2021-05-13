@@ -17,17 +17,14 @@ import numpy as np
 from nilearn import image
 from scipy.interpolate import interpn
 
-
+atlas_name='Hammers_mith'
 MNIVol = '/ImagePTE1/ajoshi/brain_development_atlases/Hammers_mith-n30r95-maxprob-MNI152-SPM12/Hammers_mith-n30r95-MaxProbMap-full-MNI152-SPM12.nii.gz'
 
 hammervol = image.resample_to_img(
     MNIVol, '/ImagePTE1/ajoshi/code_farm/icbm152/mni_icbm152_nlin_asym_09c/icbm152_t1.svreg.label.nii.gz', interpolation='nearest')
 hammervol.set_data_dtype('int16')    
-hammervol.to_filename('hammer.nii.gz')
-MNIVol = 'hammer.nii.gz'
-
-
-
+hammervol.to_filename('tmp_mni.nii.gz')
+MNIVol = 'tmp_mni.nii.gz'
 
 BrainSuitePath = '/home/ajoshi/BrainSuite19b'
 
@@ -91,8 +88,9 @@ eng.addpath(eng.genpath('/ImagePTE1/ajoshi/code_farm/svreg/src'))
 eng.addpath(eng.genpath('/ImagePTE1/ajoshi/code_farm/svreg/3rdParty'))
 eng.addpath(eng.genpath('/ImagePTE1/ajoshi/code_farm/svreg/MEX_Files'))
 
-eng.mni152_to_bci('Hammers_mith',nargout=0)
+eng.mni152_to_bci(atlas_name,nargout=0)
 eng.exit()
+
 
 
 
