@@ -27,17 +27,18 @@ def interpolate_labels(fromsurf=[], tosurf=[]):
     return tosurf
 
 
-inputfile_R='/big_disk/ajoshi/freesurfer/subjects/fsaverage/label/rh.Yeo2011_17Networks_N1000.annot'
+inputfile_R='/big_disk/ajoshi/freesurfer/subjects/fsaverage/label/rh.Yeo2011_7Networks_N1000.annot'
 fsAve_sph_R='/big_disk/ajoshi/freesurfer/subjects/fsaverage/surf/rh.sphere.reg.avg'
 fsAve_sph_32k_R='/big_disk/ajoshi/data/standard_mesh_atlases/resample_fsaverage/fs_LR-deformed_to-fsaverage.R.sphere.32k_fs_LR.surf.gii'
 fsAve_32k_R ='/data_disk/HCP_data/reference.old/100307/MNINonLinear/fsaverage_LR32k/100307.R.inflated.32k_fs_LR.surf.gii'
 
-inputfile_L='/big_disk/ajoshi/freesurfer/subjects/fsaverage/label/lh.Yeo2011_17Networks_N1000.annot'
+inputfile_L='/big_disk/ajoshi/freesurfer/subjects/fsaverage/label/lh.Yeo2011_7Networks_N1000.annot'
 fsAve_sph_L='/big_disk/ajoshi/freesurfer/subjects/fsaverage/surf/lh.sphere.reg.avg'
 fsAve_sph_32k_L='/big_disk/ajoshi/data/standard_mesh_atlases/resample_fsaverage/fs_LR-deformed_to-fsaverage.L.sphere.32k_fs_LR.surf.gii'
 fsAve_32k_L ='/ImagePTE1/ajoshi/BrainnetomeAtlas/BN_Atlas_freesurfer/fsaverage/32k/fsaverage.L.inflated.32k_fs_LR.surf.gii'
 
-gord_labels = np.empty(96854) # initialize grayordinate vector
+gord_labels = np.empty(96854,dtype=np.int16) # initialize grayordinate vector
+gord_labels[:] = -1 # Initialize the array with 
 
 class lh_sph:
     pass
@@ -89,5 +90,5 @@ view_patch_vtk(rh32k)
 gord_labels[:len(lh32k.labels)]=lh32k.labels # right hemisphere labels
 gord_labels[len(rh32k.labels):len(rh32k.labels)*2]=rh32k.labels # right hemisphere labels
 
-savemat('Yeo2011_17Networks_N1000_grayordinate_labels.mat',{'labels':gord_labels})
+savemat('Yeo2011_7Networks_N1000_grayordinate_labels.mat',{'labels':gord_labels})
 
