@@ -37,7 +37,7 @@ fsAve_sph_L='/big_disk/ajoshi/freesurfer/subjects/fsaverage/surf/lh.sphere.reg.a
 fsAve_sph_32k_L='/big_disk/ajoshi/data/standard_mesh_atlases/resample_fsaverage/fs_LR-deformed_to-fsaverage.L.sphere.32k_fs_LR.surf.gii'
 fsAve_32k_L ='/ImagePTE1/ajoshi/BrainnetomeAtlas/BN_Atlas_freesurfer/fsaverage/32k/fsaverage.L.inflated.32k_fs_LR.surf.gii'
 
-gord_labels = np.zeros(96854) # initialize grayordinate vector
+gord_labels = np.empty(96854) # initialize grayordinate vector
 
 class lh_sph:
     pass
