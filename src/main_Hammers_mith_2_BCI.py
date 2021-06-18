@@ -4,6 +4,7 @@ Created on Tue Aug 16 15:51:16 2016
 
 @author: ajoshi
 """
+import matlab.engine
 import nibabel.freesurfer.io as fsio
 from numpy.lib.function_base import interp
 from surfproc import view_patch_vtk, smooth_patch, patch_color_labels
@@ -17,12 +18,12 @@ import numpy as np
 from nilearn import image
 from scipy.interpolate import interpn
 
-atlas_name='Hammers_mith'
+atlas_name = 'Hammers_mith'
 MNIVol = '/ImagePTE1/ajoshi/brain_development_atlases/Hammers_mith-n30r95-maxprob-MNI152-SPM12/Hammers_mith-n30r95-MaxProbMap-full-MNI152-SPM12.nii.gz'
 
 hammervol = image.resample_to_img(
     MNIVol, '/ImagePTE1/ajoshi/code_farm/icbm152/mni_icbm152_nlin_asym_09c/icbm152_t1.svreg.label.nii.gz', interpolation='nearest')
-hammervol.set_data_dtype('int16')    
+hammervol.set_data_dtype('int16')
 hammervol.to_filename('tmp_mni.nii.gz')
 MNIVol = 'tmp_mni.nii.gz'
 
@@ -39,20 +40,20 @@ outmidl = 'MNI152-Hammers_mith.left.mid.cortex.dfs'
 outmidr = 'MNI152-Hammers_mith.right.mid.cortex.dfs'
 
 
-lmid = os.path.join('/ImagePTE1/ajoshi/code_farm/icbm152/mni_icbm152_nlin_asym_09c/icbm152_t1.left.inner.cortex.svreg.dfs')
-rmid = os.path.join('/ImagePTE1/ajoshi/code_farm/icbm152/mni_icbm152_nlin_asym_09c/icbm152_t1.right.inner.cortex.svreg.dfs')
+lmid = os.path.join(
+    '/ImagePTE1/ajoshi/code_farm/icbm152/mni_icbm152_nlin_asym_09c/icbm152_t1.left.inner.cortex.svreg.dfs')
+rmid = os.path.join(
+    '/ImagePTE1/ajoshi/code_farm/icbm152/mni_icbm152_nlin_asym_09c/icbm152_t1.right.inner.cortex.svreg.dfs')
 
-cmd1 = applymap_exe + ' ' + map + ' ' + MNIVol + ' ' + outvol + ' '+labelhdr
+cmd1 = applymap_exe + ' ' + map + ' ' + MNIVol + ' ' + outvol + ' ' + labelhdr
 
 print(cmd1)
 
 os.system(cmd1)
 
-
 vol_lab = image.load_img(outvol)
 vol_lab = image.new_img_like(vol_lab, np.int16(vol_lab.get_fdata()))
 vol_lab.to_filename(outvol)
-
 
 vol_lab = image.load_img(MNIVol)
 
@@ -82,15 +83,10 @@ view_patch_vtk(sr)
 writedfs(outmidl, sl)
 writedfs(outmidr, sr)
 
-import matlab.engine
 eng = matlab.engine.start_matlab()
 eng.addpath(eng.genpath('/ImagePTE1/ajoshi/code_farm/svreg/src'))
 eng.addpath(eng.genpath('/ImagePTE1/ajoshi/code_farm/svreg/3rdParty'))
 eng.addpath(eng.genpath('/ImagePTE1/ajoshi/code_farm/svreg/MEX_Files'))
 
-eng.mni152_to_bci(atlas_name,nargout=0)
+eng.mni152_to_bci(atlas_name, nargout=0)
 eng.exit()
-
-
-
-
