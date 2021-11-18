@@ -91,4 +91,16 @@ eng.addpath(eng.genpath('/ImagePTE1/ajoshi/code_farm/svreg/MEX_Files'))
 eng.mni152_to_bci(atlas_name, nargout=0)
 eng.exit()
 
+s = readdfs('BCI-'+atlas_name+'.left.mid.cortex.dfs')
+s = smooth_patch(s, iterations=3000, relaxation=.5)
+view_patch_vtk(s)
+writedfs('BCI-'+atlas_name+'.left.mid.cortex.dfs', s) 
+
+s = readdfs('BCI-'+atlas_name+'.right.mid.cortex.dfs')
+s = smooth_patch(s, iterations=3000, relaxation=.5)
+view_patch_vtk(s)
+writedfs('BCI-'+atlas_name+'.right.mid.cortex.dfs', s) 
+
+
+
 print('done')
