@@ -1,5 +1,3 @@
-||AUM||
-||Shree Ganeshaya Namaha||
 
 
 # %%
@@ -16,7 +14,7 @@ import nibabel as nib
 from nilearn import image
 
 subbasename = 'BCI-DNI_Brainnetome'
-BCI_base = '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain'
+BCI_base = '/home/ajoshi/BrainSuite21a/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain'
 left_mid = readdfs(BCI_base + '.left.mid.cortex.dfs')
 right_mid = readdfs(BCI_base + '.right.mid.cortex.dfs')
 left_inner = readdfs(BCI_base + '.left.inner.cortex.dfs')
@@ -33,7 +31,7 @@ l1_vert = (left_pial.vertices + left_mid.vertices)/2.0
 l2_vert = (left_inner.vertices + left_mid.vertices)/2.0
 
 vol_lab = image.load_img(
-    '/home/ajoshi/BrainSuite19b/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.dws.label.nii.gz')
+    '/home/ajoshi/BrainSuite21a/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain.dws.label.nii.gz')
 vol_img = vol_lab.get_fdata()
 
 xres = vol_lab.header['pixdim'][1]
