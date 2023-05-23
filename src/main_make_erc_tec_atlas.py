@@ -13,8 +13,20 @@ from nilearn import image
 from glob import glob
 from tqdm import tqdm
 from scipy.stats import mode
+import time
+import os
+from scipy.interpolate import interpn
+from surfproc import view_patch_vtk, smooth_patch, patch_color_labels
+from dfsio import writedfs, readdfs
 
 # Make average label atlas
+
+
+outvol = "BCI-ERC-TEC.label.nii.gz"
+outvol_prob = "BCI-ERC-TEC.prob.nii.gz"
+
+outmidl = "BCI-ERC-TEC.left.mid.cortex.dfs"
+outmidr = "BCI-ERC-TEC.right.mid.cortex.dfs"
 
 
 lab_list = glob("/deneb_disk/erc_tec/mapped_labels/*.nii.gz")
@@ -39,89 +51,69 @@ for i, sub in enumerate(tqdm(lab_list)):
     all_labs[..., i] = nib.load(sub).get_fdata()
 
 
-atlas_labs, counts = mode(all_labs, axis=3)
-
-subbasename = "BCI-DNI_Brainnetome"
-BCI_base = "/home/ajoshi/BrainSuite21a/svreg/BCI-DNI_brain_atlas/BCI-DNI_brain"
-left_mid = readdfs(BCI_base + ".left.mid.cortex.dfs")
-right_mid = readdfs(BCI_base + ".right.mid.cortex.dfs")
-left_inner = readdfs(BCI_base + ".left.inner.cortex.dfs")
-right_inner = readdfs(BCI_base + ".right.inner.cortex.dfs")
-left_pial = readdfs(BCI_base + ".left.pial.cortex.dfs")
-right_pial = readdfs(BCI_base + ".right.pial.cortex.dfs")
-lsurf = readdfs(subbasename + ".left.mid.cortex.dfs")
-rsurf = readdfs(subbasename + ".right.mid.cortex.dfs")
+# vals, counts = np.unique(all_labs, return_counts=True, axis=3)
 
 
-r1_vert = (right_pial.vertices + right_mid.vertices) / 2.0
-r2_vert = (right_inner.vertices + right_mid.vertices) / 2.0
-l1_vert = (left_pial.vertices + left_mid.vertices) / 2.0
-l2_vert = (left_inner.vertices + left_mid.vertices) / 2.0
+t = time.localtime()
+current_time = time.strftime("%H:%M:%S", t)
+print(current_time)
+
+# atlas_labs, counts = mode(all_labs, axis=3, keepdims=False)
+# np.savez('mode_labs.npz',atlas_labs=atlas_labs,counts=counts)
+
+print(
+    "Loading from presaved mode, if the file does not exist then uncomment the above twoo lines"
+)
+v = np.load("mode_labs.npz")
+atlas_labs = v["atlas_labs"]
+counts = v["counts"]
+
+t = time.localtime()
+current_time = time.strftime("%H:%M:%S", t)
+print(current_time)
 
 
-X, Y, Z = np.meshgrid(
-    np.arange(vol_lab.shape[0]),
-    np.arange(vol_lab.shape[1]),
-    np.arange(vol_lab.shape[2]),
-    indexing="ij",
+out_img = nib.Nifti1Image(atlas_labs, vol_lab.affine, vol_lab.header)
+out_img.to_filename(outvol)
+
+prob_img = nib.Nifti1Image(
+    np.float64(counts) / len(lab_list), vol_lab.affine, vol_lab.header
+)
+prob_img.set_data_dtype("float32")
+prob_img.to_filename(outvol_prob)
+
+
+BrainSuitePath = "/home/ajoshi/BrainSuite21a"
+
+lmid = os.path.join(
+    BrainSuitePath, "svreg", "BCI-DNI_brain_atlas", "BCI-DNI_brain.left.mid.cortex.dfs"
+)
+rmid = os.path.join(
+    BrainSuitePath, "svreg", "BCI-DNI_brain_atlas", "BCI-DNI_brain.right.mid.cortex.dfs"
 )
 
-X = X * xres
-Y = Y * yres
-Z = Z * zres
-# vol_img = sp.mod(vol_img, 1000)
-# (np.floor((vol_img/10)) == 150) | (np.floor((vol_img/10)) == 151)
-ind = (vol_img >= 1000) & (vol_img != 2000)
-Xc = X[ind]
-Yc = Y[ind]
-Zc = Z[ind]
-v_lab = vol_img[ind]
+vol_img = vol_lab.get_fdata()
 
+xres = vol_lab.header["pixdim"][1]
+yres = vol_lab.header["pixdim"][2]
+zres = vol_lab.header["pixdim"][3]
 
-class t:
-    pass
+sl = readdfs(lmid)
+sr = readdfs(rmid)
 
+xx = np.arange(vol_lab.shape[0]) * xres
+yy = np.arange(vol_lab.shape[1]) * yres
+zz = np.arange(vol_lab.shape[2]) * zres
 
-class f:
-    pass
+sl.labels = interpn((xx, yy, zz), vol_img, sl.vertices, method="nearest")
+sr.labels = interpn((xx, yy, zz), vol_img, sr.vertices, method="nearest")
 
+sl = smooth_patch(sl, iterations=3000, relaxation=0.5)
+sr = smooth_patch(sr, iterations=3000, relaxation=0.5)
 
-t.vertices = np.concatenate((Xc[:, None], Yc[:, None], Zc[:, None]), axis=1)
-f.vertices = np.concatenate(
-    (
-        left_mid.vertices,
-        right_mid.vertices,
-        left_inner.vertices,
-        right_inner.vertices,
-        left_pial.vertices,
-        right_pial.vertices,
-        l1_vert,
-        r1_vert,
-        l2_vert,
-        r2_vert,
-    )
-)
-
-f.labels = np.concatenate(
-    (
-        lsurf.labels,
-        rsurf.labels,
-        lsurf.labels,
-        rsurf.labels,
-        lsurf.labels,
-        rsurf.labels,
-        lsurf.labels,
-        rsurf.labels,
-        lsurf.labels,
-        rsurf.labels,
-    )
-)
-
-t = interpolate_labels(fromsurf=f, tosurf=t)
-
-# here make sure that hanns labels are not modified TBD
-vol_img = vol_img * 0
-vol_img[ind] = t.labels
-
-new_img = image.new_img_like(vol_lab, np.int16(vol_img))
-new_img.to_filename(subbasename + ".label.nii.gz")
+patch_color_labels(sl)
+view_patch_vtk(sl)
+patch_color_labels(sr)
+view_patch_vtk(sr)
+writedfs(outmidl, sl)
+writedfs(outmidr, sr)
