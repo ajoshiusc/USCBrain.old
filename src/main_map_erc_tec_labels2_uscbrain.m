@@ -8,20 +8,20 @@ atlasbasename = fullfile(BrainSuitePath,'svreg','USCBrain','USCBrain');
 
 %atlasbasename = fullfile(BrainSuitePath,'svreg','BrainSuiteAtlas1','mri');
 
-sublist = dir('/deneb_disk/erc_tec/ADNI10_USCBrain/*');
+sublist = dir('/deneb_disk/erc_tec/ADNI10_USCBrain_nohippo/*');
 
-outfolder = '/deneb_disk/erc_tec/mapped_labels';
+outfolder = '/deneb_disk/erc_tec/mapped_labels_nohippo';
 
 for j = 3:length(sublist)
 
     sub = sublist(j).name
     
-    if ~isfolder(['/deneb_disk/erc_tec/ADNI10_USCBrain/',sub])
+    if ~isfolder(['/deneb_disk/erc_tec/ADNI10_USCBrain_nohippo/',sub])
         continue
     end
 %    '002_S_1268'
     
-    subbasename = ['/deneb_disk/erc_tec/ADNI10_USCBrain/',sub,'/anat/',sub,'_T1w'];
+    subbasename = ['/deneb_disk/erc_tec/ADNI10_USCBrain_nohippo/',sub,'/anat/',sub,'_T1w'];
     
     [pth,sub] = fileparts(subbasename)
     inv_map_file = [subbasename,'.svreg.inv.map.nii.gz'];

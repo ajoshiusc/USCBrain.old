@@ -29,7 +29,7 @@ outmidl = "BCI-ERC-TEC.left.mid.cortex.dfs"
 outmidr = "BCI-ERC-TEC.right.mid.cortex.dfs"
 
 
-lab_list = glob("/deneb_disk/erc_tec/mapped_labels/*.nii.gz")
+lab_list = glob("/deneb_disk/erc_tec/mapped_labels_no_hippo/*.nii.gz")
 
 
 vol_lab = image.load_img(
