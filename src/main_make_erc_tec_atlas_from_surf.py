@@ -37,7 +37,7 @@ for subdir in sub_list:
 
     subbasename = subdir + '/anat/' + subname + '_T1w'
 
-    left_mid_fname = subbasename + '.left.mid.cortex.svreg.dfs'
+    left_mid_fname = subbasename + '.left.inner.cortex.svreg.dfs'
     left_mid_atlas_fname = subdir + '/anat/atlas.left.mid.cortex.svreg.dfs'
     print(subname)
 
@@ -45,7 +45,7 @@ for subdir in sub_list:
 
     l_atlas = readdfs(left_mid_atlas_fname)
 
-    vol_lab_file = subbasename + '-297L.label.nii.gz'
+    vol_lab_file = '/deneb_disk/erc_tec/ADNI10_hdr_corr/ADNI10_new/' + subname +'/anat/' + subname +'.EPT.label.nii.gz' #subbasename + '-297L.label.nii.gz'
     vol_lab = nib.load(vol_lab_file)
     vol_img = vol_lab.get_fdata()
 
@@ -62,13 +62,20 @@ for subdir in sub_list:
     zz = np.arange(vol_lab.shape[2])*zres
     l.labels = interpn((xx, yy, zz), vol_img, l.vertices, method='nearest')
 
+
     patch_color_labels(l)
-    view_patch_vtk(l)
+   # view_patch_vtk(l)
+    writedfs('/deneb_disk/erc_tec/mapped_labels_nohippo_hdr_corr/'+subname+'.left.EPT.label.dfs',l)
+
 
 
     l_atlas.labels = griddata((l.u,l.v),l.labels,(l_atlas.u,l_atlas.v),'nearest')
 
     patch_color_labels(l_atlas)
-    view_patch_vtk(l_atlas)
+    #view_patch_vtk(l_atlas)
+
+    writedfs('/deneb_disk/erc_tec/mapped_labels_nohippo_hdr_corr/'+subname+'.left.USCBrain.EPT.label.dfs',l_atlas)
+
+
 
 
