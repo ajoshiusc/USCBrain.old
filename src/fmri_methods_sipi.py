@@ -16,6 +16,7 @@ import nibabel as nib
 #from lxml import etree
 import numpy as np
 
+
 def interpolate_labels(fromsurf=[], tosurf=[]):
     ''' interpolate labels from surface to to surface'''
     tree = cKDTree(fromsurf.vertices)

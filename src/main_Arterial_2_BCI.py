@@ -17,7 +17,7 @@ from nilearn import image
 from scipy.interpolate import interpn
 
 
-MNIVol = '/ImagePTE1/ajoshi/code_farm/hybridatlas/ArterialAtlas/ArterialAtlas/Atlas/ArterialAtlas_level2.nii.gz'
+MNIVol = '/ImagePTE1/ajoshi/code_farm/hybridatlas/ArterialAtlas/ArterialAtlas/Atlas/ArterialAtlas.nii.gz'
 BrainSuitePath = '/home/ajoshi/BrainSuite21a'
 
 applymap_exe = os.path.join(BrainSuitePath, 'svreg',
@@ -26,9 +26,9 @@ map = os.path.join(BrainSuitePath, 'svreg',
                    'BCI-DNI_brain_atlas', 'map2mni.nii.gz')
 labelhdr = os.path.join(BrainSuitePath, 'svreg',
                         'BCI-DNI_brain_atlas', 'BCI-DNI_brain.label.nii.gz')
-outvol = 'BCI-Arterial_level2.label.nii.gz'
-outmidl = 'BCI-Arterial_level2.left.mid.cortex.dfs'
-outmidr = 'BCI-Arterial_level2.right.mid.cortex.dfs'
+outvol = 'BCI-Arterial.label.nii.gz'
+outmidl = 'BCI-Arterial.left.mid.cortex.dfs'
+outmidr = 'BCI-Arterial.right.mid.cortex.dfs'
 
 
 lmid = os.path.join(BrainSuitePath, 'svreg',
@@ -62,6 +62,12 @@ zz = np.arange(vol_lab.shape[2])*zres
 
 sl.labels = interpn((xx, yy, zz), vol_img, sl.vertices, method='nearest')
 sr.labels = interpn((xx, yy, zz), vol_img, sr.vertices, method='nearest')
+
+sl.labels[(sl.labels>=27) & (sl.labels <=30)] = 0
+sr.labels[(sr.labels>=27) & (sr.labels <=30)] = 0
+
+#sl.labels[(sl.labels>=7) & (sl.labels <=8)] = 0
+#sr.labels[(sr.labels>=7) & (sr.labels <=8)] = 0
 
 #sl = smooth_patch(sl, iterations=3000, relaxation=.5)
 #sr = smooth_patch(sr, iterations=3000, relaxation=.5)
